@@ -1,10 +1,24 @@
 class Solution:
     def minimumCost(self, nums):
-        if len(nums) < 3:
+        n = len(nums)
+        if n < 3:
             return sum(nums)
-        cost = 0
-        for i in range(len(nums)-2):
-            cost += nums[i]
-            nums[i+2] += nums[i+1]
-        cost += nums[-1]
-        return cost
+
+        total_sum = sum(nums)
+        target_sum = total_sum // 3
+
+        sum1, sum2, sum3 = 0, 0, 0
+        min_cost = float('inf')
+
+        for num in nums:
+            if sum1 <= target_sum and (sum2 + num) / 2 <= target_sum:
+                sum1 += num
+                min_cost = min(min_cost, num)
+            elif sum2 <= target_sum and (sum3 + num) / 2 <= target_sum:
+                sum2 += num
+                min_cost = min(min_cost, num)
+            else:
+                sum3 += num
+                min_cost = min(min_cost, num)
+
+        return min_cost
