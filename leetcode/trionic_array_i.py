@@ -4,40 +4,19 @@ class Solution:
     def isTrionic(self, nums: List[int]) -> bool:
         n = len(nums)
         
-        # Initialize variables to store the state
-        state = 0  # 0: increasing, 1: decreasing, 2: increasing again
+        # Check all possible p and q
+        for p in range(1, n-2):
+            for q in range(p+1, n-1):
+                # Check if nums[0...p] is strictly increasing
+                increasing1 = all(nums[i] < nums[i+1] for i in range(p))
+                # Check if nums[p...q] is strictly decreasing
+                decreasing = all(nums[i] > nums[i+1] for i in range(p, q))
+                # Check if nums[q...n-1] is strictly increasing
+                increasing2 = all(nums[i] < nums[i+1] for i in range(q, n-1))
+                
+                # If all conditions are met, return True
+                if increasing1 and decreasing and increasing2:
+                    return True
         
-        # Initialize p and q
-        p = q = -1
-        
-        for i in range(n - 1):
-            if state == 0:
-                if nums[i] >= nums[i + 1]:
-                    if i == 0:  # If the first two elements are not increasing, return False
-                        return False
-                    p = i
-                    state = 1
-            elif state == 1:
-                if nums[i] <= nums[i + 1]:
-                    q = i
-                    state = 2
-            elif state == 2:
-                if nums[i] >= nums[i + 1]:
-                    return False  # If it's not increasing after q, return False
-        
-        # Check if we have found valid p and q
-        if p == -1 or q == -1 or q == n - 1:
-            return False
-        
-        # Check the conditions again to ensure correctness
-        for i in range(p):
-            if nums[i] >= nums[i + 1]:
-                return False
-        for i in range(p, q):
-            if nums[i] <= nums[i + 1]:
-                return False
-        for i in range(q, n - 1):
-            if nums[i] >= nums[i + 1]:
-                return False
-        
-        return True
+        # If no suitable p and q are found, return False
+        return False
