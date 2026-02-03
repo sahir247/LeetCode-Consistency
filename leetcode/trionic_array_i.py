@@ -2,29 +2,21 @@ from typing import List
 
 class Solution:
     def isTrionic(self, nums: List[int]) -> bool:
-        n = len(nums)
-        if n < 3:
+        if len(nums) < 3:
             return False
-        p, q = -1, -1
-        for i in range(1, n - 1):
-            if nums[i - 1] < nums[i] and nums[i] > nums[i + 1]:
-                p = i
-                break
-        if p == -1:
-            return False
-        for i in range(p + 1, n - 1):
-            if nums[i - 1] > nums[i] and nums[i] < nums[i + 1]:
-                q = i
-                break
-        if q == -1:
-            return False
-        for i in range(p):
-            if nums[i] >= nums[i + 1]:
+        trend_changes = 0
+        current_trend = None
+        for i in range(1, len(nums)):
+            new_trend = None
+            if nums[i] > nums[i-1]:
+                new_trend = 'increasing'
+            elif nums[i] < nums[i-1]:
+                new_trend = 'decreasing'
+            else:
                 return False
-        for i in range(p, q):
-            if nums[i] <= nums[i + 1]:
-                return False
-        for i in range(q, n - 1):
-            if nums[i] >= nums[i + 1]:
-                return False
-        return True
+            if current_trend is not None and new_trend != current_trend:
+                trend_changes += 1
+                if trend_changes > 2:
+                    return False
+            current_trend = new_trend
+        return trend_changes == 2 and current_trend == 'increasing'
