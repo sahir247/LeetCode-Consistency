@@ -5,20 +5,20 @@ class Solution:
         n = len(nums)
         if n < 5:
             return False
-        trend = None
-        p = q = None
-        prev_num = nums[0]
+        trend = 'increasing'
+        p, q = None, None
         for i in range(1, n):
-            curr_num = nums[i]
-            if curr_num == prev_num:
+            if trend == 'increasing':
+                if nums[i] <= nums[i-1]:
+                    if p is None:
+                        p = i - 1
+                        trend = 'decreasing'
+                    else:
+                        return False
+            elif trend == 'decreasing':
+                if nums[i] >= nums[i-1]:
+                    q = i - 1
+                    trend = 'increasing'
+            if i == n - 1 and q is None:
                 return False
-            new_trend = 'increasing' if curr_num > prev_num else 'decreasing'
-            if trend == 'increasing' and new_trend == 'decreasing':
-                p = i - 1
-            elif trend == 'decreasing' and new_trend == 'increasing':
-                q = i - 1
-            trend = new_trend
-            prev_num = curr_num
-        if p is None or q is None or p == 0 or q == n-1 or p >= q:
-            return False
-        return True
+        return p is not None and q is not None and 0 < p < q < n - 1
