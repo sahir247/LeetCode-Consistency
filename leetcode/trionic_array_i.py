@@ -5,18 +5,26 @@ class Solution:
         n = len(nums)
         if n < 3:
             return False
-        trend_changes = 0
-        current_trend = None
-        for i in range(1, n):
-            if nums[i] > nums[i-1]:
-                new_trend = 'increasing'
-            elif nums[i] < nums[i-1]:
-                new_trend = 'decreasing'
-            else:
-                new_trend = current_trend
-            if new_trend != current_trend:
-                trend_changes += 1
-                if trend_changes > 3:
-                    return False
-            current_trend = new_trend
-        return trend_changes == 3 and current_trend == 'increasing'
+        p, q = -1, -1
+        for i in range(1, n - 1):
+            if nums[i - 1] < nums[i] and nums[i] > nums[i + 1]:
+                p = i
+                break
+        if p == -1:
+            return False
+        for i in range(p + 1, n - 1):
+            if nums[i] > nums[i + 1] and nums[i + 1] < nums[i + 2]:
+                q = i + 1
+                break
+        if q == -1:
+            return False
+        for i in range(1, p):
+            if nums[i - 1] >= nums[i]:
+                return False
+        for i in range(p, q):
+            if nums[i] <= nums[i + 1]:
+                return False
+        for i in range(q, n - 1):
+            if nums[i] >= nums[i + 1]:
+                return False
+        return True
