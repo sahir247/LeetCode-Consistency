@@ -3,14 +3,22 @@ from typing import List
 class Solution:
     def isTrionic(self, nums: List[int]) -> bool:
         n = len(nums)
-        
-        for p in range(1, n-1):
-            # Check if nums[0...p] is strictly increasing
-            if all(nums[i] < nums[i+1] for i in range(p)):
-                for q in range(p+1, n-1):
-                    # Check if nums[p...q] is strictly decreasing
-                    if all(nums[i] > nums[i+1] for i in range(p, q)):
-                        # Check if nums[q...n-1] is strictly increasing
-                        if all(nums[i] < nums[i+1] for i in range(q, n-1)):
-                            return True
-        return False
+        if n < 6:
+            return False
+        state = 'increasing'
+        p = q = None
+        for i in range(1, n):
+            if state == 'increasing':
+                if nums[i] <= nums[i-1]:
+                    if i == 1:
+                        return False
+                    state = 'decreasing'
+                    p = i - 1
+            elif state == 'decreasing':
+                if nums[i] >= nums[i-1]:
+                    state = 'increasing'
+                    q = i - 1
+            if state == 'increasing' and q is not None:
+                if nums[i] <= nums[i-1]:
+                    return False
+        return q is not None and p < q
