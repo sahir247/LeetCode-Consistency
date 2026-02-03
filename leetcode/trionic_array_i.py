@@ -6,19 +6,17 @@ class Solution:
         if n < 3:
             return False
         trend_changes = 0
-        trend = None
+        current_trend = None
         for i in range(1, n):
             if nums[i] > nums[i-1]:
                 new_trend = 'increasing'
             elif nums[i] < nums[i-1]:
                 new_trend = 'decreasing'
             else:
-                return False
-            if trend == new_trend:
-                continue
-            if trend is not None:
+                new_trend = current_trend
+            if new_trend != current_trend:
                 trend_changes += 1
-                if trend_changes > 2:
+                if trend_changes > 3:
                     return False
-            trend = new_trend
-        return trend_changes == 2 and trend == 'increasing'
+            current_trend = new_trend
+        return trend_changes == 3 and current_trend == 'increasing'
