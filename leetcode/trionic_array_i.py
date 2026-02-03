@@ -3,25 +3,37 @@ from typing import List
 class Solution:
     def isTrionic(self, nums: List[int]) -> bool:
         n = len(nums)
+        
+        # Check if array length is less than 3
         if n < 3:
             return False
         
-        # Find peak (p)
-        p = 0
-        while p < n - 1 and nums[p] <= nums[p + 1]:
-            p += 1
-        if p == 0 or p == n - 1:
+        # Initialize variables to store p and q
+        p, q = None, None
+        
+        # First pass to find p
+        for i in range(1, n - 1):
+            if nums[i - 1] < nums[i] and nums[i] > nums[i + 1]:
+                p = i
+                break
+        
+        # If no p is found, return False
+        if p is None:
             return False
         
-        # Find trough (q)
-        q = p
-        while q < n - 1 and nums[q] >= nums[q + 1]:
-            q += 1
-        if q == p or q == n - 1:
+        # Second pass to find q
+        for i in range(p + 1, n - 1):
+            if nums[i - 1] > nums[i] and nums[i] < nums[i + 1]:
+                q = i
+                break
+        
+        # If no q is found, return False
+        if q is None:
             return False
         
-        # Check if subarrays satisfy the required conditions
-        return (all(nums[i] < nums[i + 1] for i in range(p)) and
-                all(nums[i] > nums[i + 1] for i in range(p, q)) and
-                all(nums[i] < nums[i + 1] for i in range(q, n - 1)))
-    
+        # Validate the trionic condition
+        is_increasing1 = all(nums[j] < nums[j + 1] for j in range(p))
+        is_decreasing = all(nums[j] > nums[j + 1] for j in range(p, q))
+        is_increasing2 = all(nums[j] < nums[j + 1] for j in range(q, n - 1))
+        
+        return is_increasing1 and is_decreasing and is_increasing2
