@@ -3,27 +3,21 @@ from typing import List
 class Solution:
     def maxSumTrionic(self, nums: List[int]) -> int:
         n = len(nums)
-        prefix_sum = [0] * (n + 1)
-        for i in range(n):
-            prefix_sum[i + 1] = prefix_sum[i] + nums[i]
-        
-        def sum_subarray(l, r):
-            return prefix_sum[r + 1] - prefix_sum[l]
-        
         max_sum = float('-inf')
-        for p in range(1, n - 2):
-            for q in range(p + 1, n - 1):
-                min_sum_first = float('inf')
-                for l in range(p):
-                    min_sum_first = min(min_sum_first, sum_subarray(l, p - 1))
-                max_sum_first = max(0, -min_sum_first)
-                
-                sum_second = sum_subarray(p, q)
-                
-                min_sum_third = float('inf')
-                for r in range(q + 1, n):
-                    min_sum_third = min(min_sum_third, sum_subarray(q + 1, r))
-                max_sum_third = max(0, -min_sum_third)
-                
-                max_sum = max(max_sum, max_sum_first + sum_second + max_sum_third)
+        for l in range(n - 3):
+            sum_first_segment = 0
+            max_sum_first_segment = float('-inf')
+            for p in range(l + 1, n - 2):
+                sum_first_segment += nums[p]
+                max_sum_first_segment = max(max_sum_first_segment, sum_first_segment)
+                sum_second_segment = 0
+                max_sum_second_segment = float('-inf')
+                for q in range(p + 1, n - 1):
+                    sum_second_segment += nums[q]
+                    max_sum_second_segment = max(max_sum_second_segment, sum_second_segment)
+                    sum_third_segment = 0
+                    for r in range(q + 1, n):
+                        sum_third_segment += nums[r]
+                        current_sum = max(0, max_sum_first_segment) + max_sum_second_segment + max(0, sum_third_segment)
+                        max_sum = max(max_sum, current_sum)
         return max_sum
