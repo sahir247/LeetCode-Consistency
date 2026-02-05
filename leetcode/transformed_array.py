@@ -5,6 +5,5 @@ class Solution:
         n = len(nums)
         result = [0] * n
         for i in range(n):
-            new_index = ((i + nums[i]) % n + n) % n
-            result[i] = nums[new_index] if nums[i] != 0 else 0
+            result[((i + nums[i]) % n + n) % n] = nums[i] if nums[i] == 0 else nums[((i + nums[i]) % n + n) % n]
         return result
