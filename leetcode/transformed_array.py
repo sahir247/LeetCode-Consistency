@@ -6,5 +6,5 @@ class Solution:
         result = [0] * n
         for i in range(n):
             new_index = ((i + nums[i]) % n + n) % n
-            result[new_index] = nums[i]
+            result[new_index] = nums[i] if nums[i] == 0 else nums[new_index]
         return result
